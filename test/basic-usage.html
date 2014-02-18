@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Beuron.js test suite: Basic usage</title>
+  <link rel="stylesheet" href="lib/qunit-1.13.0.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="lib/qunit-1.13.0.js"></script>
+  <script src="../beuron.js"></script>
+  <script type="text/javascript">
+    
+    test('initial state', function testCase() {
+      var b = Beuron.create();
+      ok(b.solve([0, 0]) === 0 || b.solve([0, 0]) === 1);
+    });
+    
+    test('basic OR', function testCase() {
+      var b = Beuron.create();
+      b.learn([1, 1], 0);
+      b.learn([0, 1], 0);
+      b.learn([1, 0], 0);
+      b.learn([0, 0], 1);
+      ok(b.solve([1, 0]) === 0);
+      ok(b.solve([0, 0]) === 1);
+    });
+    
+    test('basic XOR', function testCase() {
+      var b = Beuron.create();
+      b.learn([1, 1], 0);
+      b.learn([0, 1], 1);
+      b.learn([1, 0], 1);
+      b.learn([0, 0], 0);
+      ok(b.solve([1, 0]) === 1);
+      ok(b.solve([0, 0]) === 0);
+    });
+
+    test('low memory XOR', function testCase() {
+      var b = Beuron.create(1);
+      b.learn([1, 1], 0);
+      b.learn([0, 1], 1);
+      b.learn([1, 0], 1);
+      b.learn([0, 0], 0);
+      ok(b.solve([1, 0]) === 1);
+      ok(b.solve([0, 0]) === 0);
+    });
+
+    test('noisy XOR', function testCase() {
+      var b = Beuron.create();
+
+      // ---------------- // Conflict
+      b.learn([1, 1], 0);
+      b.learn([0, 1], 1); // A
+      b.learn([1, 0], 1);
+      b.learn([0, 0], 0); // B
+      b.learn([0, 0], 1); // B
+      b.learn([0, 0], 0); // B
+      b.learn([0, 1], 0); // A
+      b.learn([0, 1], 1); // A
+      ok(b.solve([0, 0]) === 0);
+      ok(b.solve([0, 1]) === 1);
+      ok(b.solve([1, 0]) === 1);
+      ok(b.solve([1, 1]) === 0);
+    });
+    
+  </script>
+</body>
+</html>
