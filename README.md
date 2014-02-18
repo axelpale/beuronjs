@@ -15,7 +15,7 @@ Binary neuron. A logic port that learns the most probable logical function from 
     > b.solve([0, 0]);
     1
 
-## API
+## API Documentation
 
 ### Beuron.create(memorySize?)
 
@@ -35,6 +35,7 @@ Does not return anything.
 ### b.solve(sample)
 
     > b.solve([0, 1]);
+    1
 
 Takes in a sample array similar to __b.learn()__. Returns the most probable result, 0 or 1.
 
