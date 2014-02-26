@@ -50,7 +50,7 @@
     test('noisy XOR', function testCase() {
       var b = Beuron.create();
 
-      // ---------------- // Conflict
+      //                  // Conflict
       b.learn([1, 1], 0);
       b.learn([0, 1], 1); // A
       b.learn([1, 0], 1);
@@ -63,6 +63,15 @@
       ok(b.solve([0, 1]) === 1);
       ok(b.solve([1, 0]) === 1);
       ok(b.solve([1, 1]) === 0);
+    });
+
+    test('insufficient data leads to zeros', function testCase() {
+      var b = Beuron.create();
+      b.learn([1, 1], 0);
+      b.learn([0, 1], 1);
+      b.learn([1, 0], 1);
+      //b.learn([0, 0], 0);
+      ok(b.solve([0, 0]) === 0);
     });
     
   </script>

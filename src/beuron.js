@@ -1,8 +1,6 @@
 // Beuron
-//   Very inefficient but semantically clear version.
+//   Basically a histogram for possible input-output pairs.
 //
-// Known Issues
-//   - Extremely inefficient
 
 var Beuron = (function () {
   var exports = {};
@@ -10,184 +8,40 @@ var Beuron = (function () {
   
 
 
-  var Beu,
-      hitsTotal,
-      probability,
-      zeros,
-      hypotheses,
-      indexOfMax,
-      bestHypothesis,
-      limitHits;
-
-
-
-  // Helper functions
-
-  hitsTotal = function (hits) {
-    // Sum over all the hits.
-    var i,
-        sum = 0;
-    for (i = 0; i < hits.length; i += 1) {
-      sum += hits[i];
-    }
-    return sum;
-  };
-
-  probability = function (i, hits) {
-    // Probability of i:th hypothesis
-    return hits[i] / hitsTotal(hits);
-  };
-
-  zeros = function (n) {
-    // Return array filled with zeros and length of n
-    var i,
-        array = [];
-    for (i = 0; i < n; i += 1) {
-      array.push(0);
-    }
-    return array;
-  };
-
-  hypotheses = (function () {
-    return [
-      // Terminology
-      //   http://en.wikipedia.org/wiki/Truth_table#Binary_operations
-      // 
-      // Truth table
-      //        b
-      //      0   1
-      //    +---+---+
-      //   0|   |   |
-      // a  +---+---+
-      //   1|   |   |
-      //    +---+---+
-      // 
-      function contradiction(a, b) {
-        // 0 0
-        // 0 0
-        return 0;
-      },
-      function logicalConjunction(a, b) {
-        // 0 0
-        // 0 1
-        return a * b;
-      },
-      function materialNonimplication(a, b) {
-        // 0 0
-        // 1 0
-        return a * (1 - b);
-      },
-      function projectionFunctionA(a, b) {
-        // 0 0
-        // 1 1
-        return a;
-      },
-      function converseNonimplication(a, b) {
-        // 0 1
-        // 0 0
-        return (1 - a) * b;
-      },
-      function projectionFunctionB(a, b) {
-        // 0 1
-        // 0 1
-        return b;
-      },
-      function exclusiveDisjunction(a, b) {
-        // 0 1
-        // 1 0
-        return a * (1 - b) + (1 - a) * b;
-      },
-      function logicalDisjunction(a, b) {
-        // 0 1
-        // 1 1
-        return a + (1 - a) * b;
-      },
-      function logicalNOR(a, b) {
-        // 1 0
-        // 0 0
-        return (1 - a) * (1 - b);
-      },
-      function logicalBiconditional(a, b) {
-        // 1 0
-        // 0 1
-        return (1 - a) * (1 - b) + a * b;
-      },
-      function negationB(a, b) {
-        // 1 0
-        // 1 0
-        return (1 - b);
-      },
-      function converseImplication(a, b) {
-        // 1 0
-        // 1 1
-        return (1 - b) + a * b;
-      },
-      function negationA(a, b) {
-        // 1 1
-        // 0 0
-        return (1 - a);
-      },
-      function materialImplication(a, b) {
-        // 1 1
-        // 0 1
-        return (1 - a) + a * b;
-      },
-      function logicalNAND(a, b) {
-        // 1 1
-        // 1 0
-        return 1 - a * b;
-      },
-      function tautology(a, b) {
-        // 1 1
-        // 1 1
-        return 1;
-      }
-    ];
-  }());
-
-  indexOfMax = function (array) {
-    var max = array[0],
-        i,
-        item,
-        indexMax = 0;
-
-    for (i = 1; i < array.length; i += 1) {
-      item = array[i];
-      if (item > max) {
-        max = item;
-        indexMax = i;
-      }
-    }
-
-    return indexMax;
-  };
-
-  bestHypothesis = function (hypotheses, hits) {
-    // Select the best hypotheses
-    return hypotheses[indexOfMax(hits)];
-  };
-
-  limitHits = function (hits, memoryLimit) {
-    var total = hitsTotal(hits),
-        reducer,
-        i;
-    if (total > memoryLimit) {
-      reducer = memoryLimit / total;
-      for (i = 0; i < this.hits.length; i += 1) {
-        this.hits[i] = this.hits[i] * reducer;
-      }
-    }
-  };
+  var Beu;
 
 
   
   // Constructor
   
   Beu = function (memoryLimit) {
-    // Hypotheses' histogram for 16 hypotheses.
-    this.hits = zeros(16);
+    // Create new beuron.
+    // 
+    // Parameter
+    //   memoryLimit (optional, default 0)
+    //     Each learnt sample adds 1 to the size of its associated bucket.
+    //     If the sum of the buckets exceeds the limit then each bucket is
+    //     reduced propotionally so that the sum goes back to the limit.
+    //     An outcome is that the effect of old samples eventually decreases
+    //     while more recent samples have the biggest effect. Smaller
+    //     the memory, more quickly Beuron learns if the distribution changes.
+    //     
 
-    // Memory limit. Limit for hitsTotal.
+    // Histogram for 8 possible input-output pairs.
+    // 0: 00 0
+    // 1: 00 1
+    // 2: 01 0
+    // 3: 01 1
+    // 4: 10 0
+    // 5: 10 1
+    // 6: 11 0
+    // 7: 11 1
+    this.buckets = [0, 0, 0, 0, 0, 0, 0, 0];
+
+    // Weighted sum of the samples.
+    this.total = 0;
+
+    // Memory limit. Limit for beuron.total.
     // Smaller the limit, greater the learning rate.
     // Memory limit of zero or negative means max limit.
     //   Max integer of JavaScript is 2^53. In the worst case
@@ -195,7 +49,7 @@ var Beuron = (function () {
     //   comes then to 2^49. Add some margin: 2^46;
     if (typeof memoryLimit === 'undefined') { memoryLimit = 0; }
     if (memoryLimit <= 0) {
-      memoryLimit = Math.pow(2, 46);
+      memoryLimit = 70368744177664; // Math.pow(2, 46);
     }
     this.memoryLimit = memoryLimit;
   };
@@ -210,11 +64,27 @@ var Beuron = (function () {
 
   Beu.prototype.solve = function (sourceVector) {
     // Solve the source vector
-    // Return most probable targetVector
-    var h = bestHypothesis(hypotheses, this.hits),
-        a = sourceVector[0],
-        b = sourceVector[1];
-    return h(a, b);
+    // 
+    // Parameter
+    //   sourceVector
+    //     Array of size 2. Only 0's or 1's. Example [1, 0]
+    // 
+    // Return
+    //   most probable value
+    //     0 or 1
+
+    var bucketIndex = 0;
+    if (sourceVector[0] === 1) {
+      bucketIndex += 4;
+    }
+    if (sourceVector[1] === 1) {
+      bucketIndex += 2;
+    }
+
+    if (this.buckets[bucketIndex] < this.buckets[bucketIndex + 1]) {
+      return 1;
+    } // else zero has more or equal number of samples
+    return 0;
   };
 
 
@@ -222,33 +92,47 @@ var Beuron = (function () {
   // Mutators
   
   Beu.prototype.learn = function (sourceVector, targetVector) {
-    // Learn the mapping.
-    var i,
-        hypothesis,
-        matches = [],
-        reward,
-        matchIndex,
-        a = sourceVector[0],
-        b = sourceVector[1],
-        y = targetVector;
+    // Parameter
+    //   sourceVector
+    //     Input. Array of size 2. Only 0's or 1's. Example [1, 0]
+    //   targetVector
+    //     Output. Single value, 0 or 1.
+    // 
+    // Return
+    //   this
+    //     for chaining
 
-    // Find the matching hypotheses
-    for (i = 0; i < hypotheses.length; i += 1) {
-      hypothesis = hypotheses[i];
-      if (hypothesis(a, b) === y) {
-        matches.push(i);
-      }
+    var bucketIndex = 0,
+        reducer,
+        i;
+
+    if (sourceVector[0] === 1) {
+      bucketIndex += 4;
+    }
+    if (sourceVector[1] === 1) {
+      bucketIndex += 2;
+    }
+    if (targetVector === 1) {
+      bucketIndex += 1;
     }
 
-    // Share 1 point evenly among the hypotheses
-    reward = 1 / matches.length;
-    for (i = 0; i < matches.length; i += 1) {
-      matchIndex = matches[i];
-      this.hits[matchIndex] += reward;
-    }
+    this.buckets[bucketIndex] += 1;
+    this.total += 1;
 
     // Memory limit.
-    limitHits(this.hits, this.memoryLimit);
+    // If there is too many samples in buckets, multiplies each bucket
+    // so that the total decreases to memoryLimit.
+    // This is done only after memoryLimit is exceeded so the first
+    // samples are not exaggerated.
+    if (this.total > this.memoryLimit) {
+      reducer = this.memoryLimit / this.total;
+      for (i = 0; i < 8; i += 1) {
+        this.buckets[i] *= reducer;
+      }
+      this.total = this.memoryLimit; // new total
+    }
+
+    return this;
   };
   
 
