@@ -26,6 +26,16 @@ module.exports = function(grunt) {
  * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> <<%= pkg.author.email %>>;\n\
  * Licensed under the <%= pkg.license.type %> license */\n\n'
     },
+
+    // List available tasks
+    availabletasks: {
+      tasks: {
+        options: {
+          filter: 'include',
+          tasks: ['default', 'build', 'test', 'benchmark']
+        }
+      }
+    },
     
     // Merge source files
     concat: {
@@ -159,6 +169,7 @@ module.exports = function(grunt) {
   });
   
   // Load tasks
+  grunt.loadNpmTasks('grunt-available-tasks'); // For listing tasks
   grunt.loadNpmTasks('grunt-contrib-concat'); // For merging files together
   grunt.loadNpmTasks('grunt-contrib-uglify'); // For minifying
   grunt.loadNpmTasks('grunt-contrib-jshint'); // For sanity testing
@@ -168,7 +179,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-replace'); // For adding versions
   
   // Default task(s).
-  grunt.registerTask('default', ['build']);
+  grunt.registerTask('default', ['availabletasks']);
   grunt.registerTask('build', ['replace', 'concat', 'uglify', 'test']);
   grunt.registerTask('test', ['test:syntax', 'test:function']);
   grunt.registerTask('test:syntax', ['jshint']);
