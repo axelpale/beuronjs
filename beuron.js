@@ -1,4 +1,4 @@
-/*! beuron - v0.0.1 - 2014-02-18
+/*! beuron - v0.0.1 - 2014-02-26
  * https://github.com/axelpale/beuronjs
  *
  * Copyright (c) 2014 Akseli Palen <akseli.palen@gmail.com>;
