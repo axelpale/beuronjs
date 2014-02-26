@@ -1,4 +1,4 @@
-# Beuron.js
+# Beuron.js<sup>v0.1.0</sup>
 
 Binary neuron. A logic port that learns the most probable logical function from samples. Capable of online learning and handling noisy data.
 

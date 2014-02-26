@@ -136,6 +136,23 @@ module.exports = function(grunt) {
             dest: 'src/version.js'
           }
         ]
+      },
+      readme: {
+        options: {
+          patterns: [
+            {
+              match: />v\d+\.\d+\.\d+</,
+              replacement: ">v<%= pkg.version %><",
+              expression: true // use RegExp
+            }
+          ]
+        },
+        files: [
+          {
+            src: ['README.md'],
+            dest: 'README.md'
+          }
+        ]
       }
     },
     
@@ -180,7 +197,7 @@ module.exports = function(grunt) {
   
   // Default task(s).
   grunt.registerTask('default', ['availabletasks']);
-  grunt.registerTask('build', ['replace', 'concat', 'uglify', 'test']);
+  grunt.registerTask('build', ['replace', 'replace:readme', 'concat', 'uglify', 'test']);
   grunt.registerTask('test', ['test:syntax', 'test:function']);
   grunt.registerTask('test:syntax', ['jshint']);
   grunt.registerTask('test:function', ['connect', 'qunit']);
