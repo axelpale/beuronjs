@@ -54,8 +54,8 @@ var Beuron = (function () {
     this.memoryLimit = memoryLimit;
   };
   
-  exports.create = function () {
-    return new Beu();
+  exports.create = function (memoryLimit) {
+    return new Beu(memoryLimit);
   };
   
   
@@ -127,21 +127,25 @@ var Beuron = (function () {
       bucketIndex += 1;
     }
 
-    this.buckets[bucketIndex] += 1;
-    this.total += 1;
-
     // Memory limit.
     // If there is too many samples in buckets, multiplies each bucket
     // so that the total decreases to memoryLimit.
-    // This is done only after memoryLimit is exceeded so the first
-    // samples are not exaggerated.
-    if (this.total > this.memoryLimit) {
-      reducer = this.memoryLimit / this.total;
+    // This is done only after memoryLimit is going to be exceeded so
+    // the first samples are not exaggerated.
+    if (this.total > this.memoryLimit - 1) {
+      reducer = (this.memoryLimit - 1) / this.total;
       for (i = 0; i < 8; i += 1) {
         this.buckets[i] *= reducer;
       }
-      this.total = this.memoryLimit; // new total
+      this.total = this.memoryLimit - 1; // new total
     }
+
+    // Now there is room for one in the memory. Add after limiting
+    // and not before because otherwise 1st and (memoryLimit + 1):th sample
+    // would be equally weighted. 1st and (memoryLimit):th should be
+    // equally weighted.
+    this.buckets[bucketIndex] += 1;
+    this.total += 1;
 
     return this;
   };
