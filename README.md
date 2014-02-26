@@ -27,10 +27,11 @@ The memorySize is optional positive number that defines how quickly old samples 
 ### b.learn(sample, result)
 
     > b.learn([0, 1], 1);
+    undefined
 
 Sample is an array with length of _two_. The elements of the array and also the result must be 0 or 1.
 
-Does not return anything.
+Does not return anything (undefined).
 
 ### b.solve(sample)
 
@@ -38,6 +39,20 @@ Does not return anything.
     1
 
 Takes in a sample array similar to __b.learn()__. Returns the most probable result, 0 or 1.
+
+### b.save()
+
+    > b.save();
+    [3.2, 1.2, 0, 18, 2.9, 1.6, 0, 2.1, 29]
+
+Exports the state of beuron for example to be stored in database. See b.load().
+
+### b.load(savedArray)
+
+    > b.load(previouslySavedArray)
+    undefined
+
+Resets beuron back to the saved state. See b.save().
 
 ## Customize Beuron
 
