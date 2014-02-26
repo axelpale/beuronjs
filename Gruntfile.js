@@ -114,7 +114,7 @@ module.exports = function(grunt) {
         options: {
           patterns: [
             {
-              match: /\.version\s=\s'\d\.\d\.\d'/,
+              match: /\.version\s*=\s*'\d+\.\d+\.\d+'/,
               replacement: ".version = '<%= pkg.version %>'",
               expression: true // use RegExp
             }
