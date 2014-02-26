@@ -38,7 +38,7 @@ Does not return anything (undefined).
     > b.solve([0, 1]);
     1
 
-Takes in a sample array similar to __b.learn()__. Returns the most probable result, 0 or 1.
+Takes in a sample array similar to __b.learn()__. Returns the most probable result, 0 or 1. If equally probable or no data, returns 0.
 
 ### b.save()
 
