@@ -87,6 +87,17 @@ var Beuron = (function () {
     return 0;
   };
 
+  Beu.prototype.save = function () {
+    // Return
+    //   State of beuron in single array to be for example stored to database.
+    // 
+    // 
+    // See also load()
+    var copy = this.buckets.slice(0);
+    copy.push(this.memoryLimit);
+    return copy;
+  };
+
 
   
   // Mutators
@@ -133,6 +144,16 @@ var Beuron = (function () {
     }
 
     return this;
+  };
+
+  Beu.prototype.load = function (savedArray) {
+    // See save()
+    this.buckets = savedArray.slice(0, -1);
+    this.memoryLimit = savedArray[savedArray.length - 1];
+    this.total = 0;
+    for (var i = 0; i < 8; i += 1) {
+      this.total += this.buckets[i];
+    }
   };
   
 

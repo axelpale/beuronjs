@@ -73,6 +73,24 @@
       //b.learn([0, 0], 0);
       ok(b.solve([0, 0]) === 0);
     });
+
+    test('save and load', function testCase() {
+      var b = Beuron.create();
+      var c = Beuron.create();
+      b.learn([1, 1], 0); // XOR
+      b.learn([0, 1], 1);
+      b.learn([1, 0], 1);
+      b.learn([0, 0], 0);
+      c.learn([1, 1], 1); // Tautology
+      c.learn([0, 1], 1);
+      c.learn([1, 0], 1);
+      c.learn([0, 0], 1);
+      c.load(b.save());
+      ok(c.solve([0, 0]) === 0); // XOR
+      ok(c.solve([0, 1]) === 1);
+      ok(c.solve([1, 0]) === 1);
+      ok(c.solve([1, 1]) === 0);
+    });
     
   </script>
 </body>
