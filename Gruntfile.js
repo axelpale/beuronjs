@@ -147,6 +147,14 @@ module.exports = function(grunt) {
           base: '.'
         }
       }
+    },
+
+    // Run benchmarks
+    benchmark: {
+      all: {
+        src: ['benchmarks/*.js'],
+        dest: 'benchmarks/results-<%= pkg.version %>.csv'
+      }
     }
   });
   
@@ -156,6 +164,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint'); // For sanity testing
   grunt.loadNpmTasks('grunt-contrib-qunit'); // For functional testing
   grunt.loadNpmTasks('grunt-contrib-connect'); // For functional test server
+  grunt.loadNpmTasks('grunt-benchmark'); // Performance testing
   grunt.loadNpmTasks('grunt-replace'); // For adding versions
   
   // Default task(s).
