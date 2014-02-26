@@ -49,7 +49,7 @@ Exports the state of beuron for example to be stored in database. See b.load().
 
 ### b.load(savedArray)
 
-    > b.load(previouslySavedArray)
+    > b.load(previouslySavedArray);
     undefined
 
 Resets beuron back to the saved state. See b.save().
