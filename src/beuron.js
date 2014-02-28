@@ -204,6 +204,22 @@ var Beuron = (function () {
     this.buckets = savedArray.slice(0, -1);
     this.sizeLimit = savedArray[savedArray.length - 1];
   };
+
+  Beu.prototype.setSizeLimit = function (newSizeLimit) {
+    // Set new size limit. See create()
+    var i, pairSum, reducer;
+
+    this.sizeLimit = newSizeLimit;
+
+    for (i = 0; i < 8; i += 2) {
+      pairSum = this.buckets[i] + this.buckets[i + 1];
+      if (pairSum > this.sizeLimit) {
+        reducer = this.sizeLimit / pairSum;
+        this.buckets[i] *= reducer;
+        this.buckets[i + 1] *= reducer;
+      }
+    }
+  };
   
 
 

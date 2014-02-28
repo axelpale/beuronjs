@@ -1,4 +1,4 @@
-/*! beuron - v1.0.0 - 2014-02-28
+/*! beuron - v1.1.0 - 2014-02-28
  * https://github.com/axelpale/beuronjs
  *
  * Copyright (c) 2014 Akseli Palen <akseli.palen@gmail.com>;
@@ -222,6 +222,22 @@ var Beuron = (function () {
     this.buckets = savedArray.slice(0, -1);
     this.sizeLimit = savedArray[savedArray.length - 1];
   };
+
+  Beu.prototype.setSizeLimit = function (newSizeLimit) {
+    // Set new size limit. See create()
+    var i, pairSum, reducer;
+
+    this.sizeLimit = newSizeLimit;
+
+    for (i = 0; i < 8; i += 2) {
+      pairSum = this.buckets[i] + this.buckets[i + 1];
+      if (pairSum > this.sizeLimit) {
+        reducer = this.sizeLimit / pairSum;
+        this.buckets[i] *= reducer;
+        this.buckets[i + 1] *= reducer;
+      }
+    }
+  };
   
 
 
@@ -238,7 +254,7 @@ var Beuron = (function () {
 
 
   // Version
-  Beuron.version = '1.0.0';
+  Beuron.version = '1.1.0';
 
 
   

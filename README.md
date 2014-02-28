@@ -1,4 +1,4 @@
-# Beuron.js<sup>v1.0.0</sup>
+# Beuron.js<sup>v1.1.0</sup>
 
 Binary neuron. A logic port that learns the most probable logical function from samples. Capable of online learning and handling noisy data.
 
@@ -53,6 +53,13 @@ Exports the state of beuron for example to be stored in database. See b.load().
     undefined
 
 Resets beuron back to the saved state. See b.save().
+
+### b.setSizeLimit(newSizeLimit)
+
+    > b.setSizeLimit(4);
+    undefined
+
+See Beuron.create().
 
 ## Customize Beuron
 
