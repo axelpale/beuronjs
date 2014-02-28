@@ -124,6 +124,14 @@
       b.learn([0, 0], 0); // Noise
       ok(b.solve([0,0]) === 0); // Forgetted the previous
     });
+
+    test('customization', function testCase() {
+      var b = Beuron.create();
+      Beuron.extension.myFunction = function () {
+        return 'foo';
+      };
+      ok(b.myFunction() === 'foo');
+    });
     
   </script>
 </body>
