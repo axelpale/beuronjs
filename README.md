@@ -19,7 +19,7 @@ Binary neuron. A logic port that learns the most probable logical function from 
 
 Node.js: `npm install beuron` and `var Beuron = require('beuron');`
 
-Browsers: download and `<script src="beuron.js" />`
+Browsers: download and `<script src="beuron.js"></script>`
 
 ## API
 
