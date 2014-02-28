@@ -1,6 +1,6 @@
 # Beuron.js<sup>v1.1.0</sup>
 
-Binary neuron. A logic port that learns the most probable logical function from samples. Capable of online learning and handling noisy data. Tested, optimized and less than 400 bytes when compressed. Compatible with browsers and Node.js.
+Binary neuron. A logic port that learns the most probable logical function from samples. Capable of online learning, forgetting and handling noisy data. Tested, optimized and less than 400 bytes when compressed. Compatible with browsers and Node.js.
 
 
 ## Basic example
@@ -15,17 +15,13 @@ Binary neuron. A logic port that learns the most probable logical function from 
     > b.solve([0, 0]);
     1
 
+## Install
+
+Node.js: ´npm install beuron´ and ´var Beuron = require('beuron');´
+
+Browsers: download and ´<script src="beuron.js" />´
+
 ## API
-
-### Include
-
-Node.js
-
-    var Beuron = require('beuron');
-
-Browsers
-
-    <script src="beuron.js" />
 
 ### Beuron.create(sizeLimit?)
 
