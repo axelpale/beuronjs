@@ -14,7 +14,7 @@
     
     test('initial state', function testCase() {
       var b = Beuron.create();
-      ok(b.solve([0, 0]) === 0 || b.solve([0, 0]) === 1);
+      ok(b.solve([0, 0]) === 0);
     });
     
     test('basic OR', function testCase() {
@@ -37,19 +37,19 @@
       ok(b.solve([0, 0]) === 0);
     });
 
-    test('low memory NAND', function testCase() {
+    test('low memory', function testCase() {
       var b = Beuron.create(1);
-      ok(b.memoryLimit === 1, 'b.memoryLimit: ' + b.memoryLimit);
+      ok(b.sizeLimit === 1, 'b.sizeLimit: ' + b.sizeLimit);
+      b.learn([0, 0], 1)
+      b.learn([1, 1], 1);
+      b.learn([1, 1], 1);
       b.learn([1, 1], 0);
-      b.learn([0, 1], 1);
-      b.learn([1, 0], 1);
-      b.learn([0, 0], 1);
-      ok(b.solve([1, 0]) === 0); // Does not remember
-      ok(b.solve([0, 0]) === 1); // Does remember
+      ok(b.solve([1, 1]) === 0); // Remembers only the last
+      ok(b.solve([0, 0]) === 1); // Does remember in other pair
     });
 
     test('forgetting', function testCase() {
-      var b = Beuron.create(4);
+      var b = Beuron.create(1);
       b.learn([1, 1], 0); // First XOR
       b.learn([0, 1], 1);
       b.learn([1, 0], 1);

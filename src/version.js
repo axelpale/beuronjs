@@ -1,2 +1,2 @@
   // Version
-  Beuron.version = '0.2.1';
+  Beuron.version = '1.0.0';

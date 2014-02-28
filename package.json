@@ -1,6 +1,6 @@
 {
   "name": "beuron",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "Beuron for JavaScript. A binary neuron.",
   "homepage": "https://github.com/axelpale/beuronjs",
   "main": "beuron.js",
