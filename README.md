@@ -22,7 +22,7 @@ Binary neuron. A logic port that learns the most probable logical function from 
     > var b = Beuron.create();
     > var c = Beuron.create(6);
 
-The sizeLimit is an optional positive number that defines how quickly old samples will be forgotten when new ones are learned. Set to zero to force solve() results to be based on all the learned samples. Set to 2 to base results on approximately two previous samples for each four different sample types. Default is zero.
+The sizeLimit is an optional positive number that defines how quickly old samples will be forgotten when new ones are learned. Set to zero to force [_solve()_](#bsolvesample) results to be based on all the learned samples. Set to 2 to base results on approximately two previous samples for each four different sample types. Default is zero. See [Under the hood](#under-the-hood) for details.
 
 ### b.learn(sample, result)
 
@@ -38,28 +38,28 @@ Does not return anything (undefined).
     > b.solve([0, 1]);
     1
 
-Takes in a sample array similar to _b.learn()_. Returns the most probable result, 0 or 1. If equally probable or no data, returns 0.
+Takes in a sample array similar to [_b.learn()_](#blearnsample-result). Returns the most probable result, 0 or 1. If equally probable or no data, returns 0.
 
 ### b.save()
 
     > b.save();
     [3.2, 1.2, 0, 18, 2.9, 1.6, 0, 2.1, 29]
 
-Exports the state of beuron for example to be stored in database. See b.load().
+Exports the state of beuron for example to be stored in database. See [_b.load()_](#bloadsavedarray).
 
 ### b.load(savedArray)
 
     > b.load(previouslySavedArray);
     undefined
 
-Resets beuron back to the saved state. See b.save().
+Resets beuron back to the saved state. See [_b.save()_](#bsave).
 
 ### b.setSizeLimit(newSizeLimit)
 
     > b.setSizeLimit(4);
     undefined
 
-See Beuron.create().
+See [_Beuron.create()_](#beuroncreatesizelimit).
 
 ## Customize Beuron
 
