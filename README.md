@@ -15,14 +15,14 @@ Binary neuron. A logic port that learns the most probable logical function from 
     > b.solve([0, 0]);
     1
 
-## API Documentation
+## API
 
 ### Beuron.create(sizeLimit?)
 
     > var b = Beuron.create();
     > var c = Beuron.create(6);
 
-The sizeLimit is an optional positive number that defines how quickly old samples will be forgotten when new ones are learned. Set to zero to force solve() results to be based on all the learned samples. Set to 2 to base results on approximately two previous samples for each different sample. Default is zero.
+The sizeLimit is an optional positive number that defines how quickly old samples will be forgotten when new ones are learned. Set to zero to force solve() results to be based on all the learned samples. Set to 2 to base results on approximately two previous samples for each four different sample types. Default is zero.
 
 ### b.learn(sample, result)
 
