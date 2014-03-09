@@ -2,6 +2,7 @@
 
 Binary neuron. A logic port that learns the most probable logical function from samples. Capable of online learning, forgetting and handling noisy data. Tested, optimized and less than 400 bytes when compressed. Compatible with browsers and Node.js.
 
+![Beuron Logic Port](../master/doc/beuron-logo-200.png?raw=true)
 
 ## Basic example
 
